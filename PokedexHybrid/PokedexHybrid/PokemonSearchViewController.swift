@@ -16,5 +16,22 @@ class PokemonSearchViewController: UIViewController {
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var abilitiesLabel: UILabel!
     
+}
+
+// MARK: - SearchBar Delegate
+
+extension PokemonSearchViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
+        DMNPokemonController.fetchPokemon(forSearchTerm: searchTerm) { (pokmeon) in
+            DispatchQueue.main.async {
+                guard let pokemon = pokmeon else { return }
+                self.nameLabel.text = pokemon.name.capitalized
+                self.idLabel.text = "ID: \(pokemon.identifier)"
+                self.abilitiesLabel.text = "Abilities: \(pokemon.abilities.joined(separator: ", "))"
+            }
+        }
+    }
     
 }
